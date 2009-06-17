@@ -45,7 +45,7 @@ Partial Class frmMain
         Me.txtDownloadUsername1 = New System.Windows.Forms.TextBox
         Me.TabPage2 = New System.Windows.Forms.TabPage
         Me.Label20 = New System.Windows.Forms.Label
-        Me.btnStartMassUpload = New System.Windows.Forms.Button
+        Me.btnStartBulkUpload = New System.Windows.Forms.Button
         Me.GroupBox4 = New System.Windows.Forms.GroupBox
         Me.Label11 = New System.Windows.Forms.Label
         Me.txtUploadServer2 = New System.Windows.Forms.TextBox
@@ -81,6 +81,11 @@ Partial Class frmMain
         Me.Label10 = New System.Windows.Forms.Label
         Me.TextBox5 = New System.Windows.Forms.TextBox
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.bwUploader = New System.ComponentModel.BackgroundWorker
+        Me.pbUpload = New System.Windows.Forms.ProgressBar
+        Me.btnCancelBulkUpload = New System.Windows.Forms.Button
+        Me.Label21 = New System.Windows.Forms.Label
+        Me.lblUploadedCount = New System.Windows.Forms.Label
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -99,16 +104,16 @@ Partial Class frmMain
         Me.txtErrorLog.Multiline = True
         Me.txtErrorLog.Name = "txtErrorLog"
         Me.txtErrorLog.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.txtErrorLog.Size = New System.Drawing.Size(717, 150)
+        Me.txtErrorLog.Size = New System.Drawing.Size(735, 147)
         Me.txtErrorLog.TabIndex = 8
         Me.txtErrorLog.TabStop = False
         '
         'lbProcess
         '
         Me.lbProcess.FormattingEnabled = True
-        Me.lbProcess.Location = New System.Drawing.Point(12, 167)
+        Me.lbProcess.Location = New System.Drawing.Point(7, 193)
         Me.lbProcess.Name = "lbProcess"
-        Me.lbProcess.Size = New System.Drawing.Size(717, 173)
+        Me.lbProcess.Size = New System.Drawing.Size(740, 147)
         Me.lbProcess.TabIndex = 9
         '
         'TabControl1
@@ -117,7 +122,7 @@ Partial Class frmMain
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.TabPage4)
-        Me.TabControl1.Location = New System.Drawing.Point(1, 9)
+        Me.TabControl1.Location = New System.Drawing.Point(7, 9)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(740, 152)
@@ -275,8 +280,9 @@ Partial Class frmMain
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.btnCancelBulkUpload)
         Me.TabPage2.Controls.Add(Me.Label20)
-        Me.TabPage2.Controls.Add(Me.btnStartMassUpload)
+        Me.TabPage2.Controls.Add(Me.btnStartBulkUpload)
         Me.TabPage2.Controls.Add(Me.GroupBox4)
         Me.TabPage2.Controls.Add(Me.GroupBox3)
         Me.TabPage2.Controls.Add(Me.btnOpenFile)
@@ -285,7 +291,7 @@ Partial Class frmMain
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPage2.Size = New System.Drawing.Size(732, 126)
         Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Mass Upload"
+        Me.TabPage2.Text = "Bulk Upload"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
         'Label20
@@ -298,15 +304,15 @@ Partial Class frmMain
         Me.Label20.TabIndex = 14
         Me.Label20.Text = "* Examine SampleAccountFile.txt for accounts file structure."
         '
-        'btnStartMassUpload
+        'btnStartBulkUpload
         '
-        Me.btnStartMassUpload.Enabled = False
-        Me.btnStartMassUpload.Location = New System.Drawing.Point(565, 15)
-        Me.btnStartMassUpload.Name = "btnStartMassUpload"
-        Me.btnStartMassUpload.Size = New System.Drawing.Size(150, 87)
-        Me.btnStartMassUpload.TabIndex = 13
-        Me.btnStartMassUpload.Text = "Start Mass Upload"
-        Me.btnStartMassUpload.UseVisualStyleBackColor = True
+        Me.btnStartBulkUpload.Enabled = False
+        Me.btnStartBulkUpload.Location = New System.Drawing.Point(507, 15)
+        Me.btnStartBulkUpload.Name = "btnStartBulkUpload"
+        Me.btnStartBulkUpload.Size = New System.Drawing.Size(105, 87)
+        Me.btnStartBulkUpload.TabIndex = 13
+        Me.btnStartBulkUpload.Text = "Start Bulk Upload"
+        Me.btnStartBulkUpload.UseVisualStyleBackColor = True
         '
         'GroupBox4
         '
@@ -366,7 +372,7 @@ Partial Class frmMain
         '
         Me.btnOpenFile.Location = New System.Drawing.Point(395, 15)
         Me.btnOpenFile.Name = "btnOpenFile"
-        Me.btnOpenFile.Size = New System.Drawing.Size(150, 87)
+        Me.btnOpenFile.Size = New System.Drawing.Size(105, 87)
         Me.btnOpenFile.TabIndex = 0
         Me.btnOpenFile.Text = "Load accounts from file"
         Me.btnOpenFile.UseVisualStyleBackColor = True
@@ -638,13 +644,54 @@ Partial Class frmMain
         '
         'ToolTip1
         '
-        Me.ToolTip1.ToolTipTitle = "About Chilkat IMAP Compenent"
+        Me.ToolTip1.ToolTipTitle = "About Chilkat IMAP Component"
+        '
+        'bwUploader
+        '
+        '
+        'pbUpload
+        '
+        Me.pbUpload.Location = New System.Drawing.Point(116, 167)
+        Me.pbUpload.Name = "pbUpload"
+        Me.pbUpload.Size = New System.Drawing.Size(585, 20)
+        Me.pbUpload.TabIndex = 11
+        '
+        'btnCancelBulkUpload
+        '
+        Me.btnCancelBulkUpload.Enabled = False
+        Me.btnCancelBulkUpload.Location = New System.Drawing.Point(619, 15)
+        Me.btnCancelBulkUpload.Name = "btnCancelBulkUpload"
+        Me.btnCancelBulkUpload.Size = New System.Drawing.Size(105, 87)
+        Me.btnCancelBulkUpload.TabIndex = 15
+        Me.btnCancelBulkUpload.Text = "Cancel"
+        Me.btnCancelBulkUpload.UseVisualStyleBackColor = True
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(9, 171)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(107, 13)
+        Me.Label21.TabIndex = 12
+        Me.Label21.Text = "Uploaded Accounts :"
+        '
+        'lblUploadedCount
+        '
+        Me.lblUploadedCount.AutoSize = True
+        Me.lblUploadedCount.Location = New System.Drawing.Point(707, 171)
+        Me.lblUploadedCount.Name = "lblUploadedCount"
+        Me.lblUploadedCount.Size = New System.Drawing.Size(24, 13)
+        Me.lblUploadedCount.TabIndex = 13
+        Me.lblUploadedCount.Text = "0/0"
         '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(743, 502)
+        Me.ClientSize = New System.Drawing.Size(756, 502)
+        Me.Controls.Add(Me.lblUploadedCount)
+        Me.Controls.Add(Me.Label21)
+        Me.Controls.Add(Me.pbUpload)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.lbProcess)
         Me.Controls.Add(Me.txtErrorLog)
@@ -708,7 +755,7 @@ Partial Class frmMain
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents TextBox5 As System.Windows.Forms.TextBox
-    Friend WithEvents btnStartMassUpload As System.Windows.Forms.Button
+    Friend WithEvents btnStartBulkUpload As System.Windows.Forms.Button
     Friend WithEvents TabPage3 As System.Windows.Forms.TabPage
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents txtLicense As System.Windows.Forms.TextBox
@@ -731,5 +778,10 @@ Partial Class frmMain
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
+    Friend WithEvents bwUploader As System.ComponentModel.BackgroundWorker
+    Friend WithEvents pbUpload As System.Windows.Forms.ProgressBar
+    Friend WithEvents btnCancelBulkUpload As System.Windows.Forms.Button
+    Friend WithEvents Label21 As System.Windows.Forms.Label
+    Friend WithEvents lblUploadedCount As System.Windows.Forms.Label
 
 End Class

@@ -1,0 +1,95 @@
+17.06.2009 12:35 -------- ChilkatLog:
+  Connect:
+    DllDate: Mar 19 2009
+    UnlockPrefix: Anything for 30-day trial
+    Username: atakan.eser
+    Component: .NET 2.0
+    hostname: 89.19.7.250
+    port: 143
+    socket is not ready for writing
+    Connect function failed.
+    SocketError: WSAEWOULDBLOCK The socket would block.
+    For more information see http://www.chilkatsoft.com/p/p_172.asp
+    failReason: 7
+    connect failed.
+    greeting: 
+
+17.06.2009 13:37 -------- ChilkatLog:
+  Connect:
+    DllDate: Mar 19 2009
+    UnlockPrefix: Anything for 30-day trial
+    Username: atakan.eser
+    Component: .NET 2.0
+    hostname: 
+    port: 143
+    Cannot connect, hostname is zero length
+    failReason: 1
+    connect failed.
+    greeting: 
+
+17.06.2009 13:37 -------- ChilkatLog:
+  Connect:
+    DllDate: Mar 19 2009
+    UnlockPrefix: Anything for 30-day trial
+    Username: atakan.eser
+    Component: .NET 2.0
+    hostname: 
+    port: 143
+    Cannot connect, hostname is zero length
+    failReason: 1
+    connect failed.
+    greeting: 
+
+17.06.2009 13:37 -------- ChilkatLog:
+  Connect:
+    DllDate: Mar 19 2009
+    UnlockPrefix: Anything for 30-day trial
+    Username: atakan.eser
+    Component: .NET 2.0
+    hostname: 
+    port: 143
+    Cannot connect, hostname is zero length
+    failReason: 1
+    connect failed.
+    greeting: 
+
+17.06.2009 13:37 -------- ChilkatLog:
+  Connect:
+    DllDate: Mar 19 2009
+    UnlockPrefix: Anything for 30-day trial
+    Username: atakan.eser
+    Component: .NET 2.0
+    hostname: 
+    port: 143
+    Cannot connect, hostname is zero length
+    failReason: 1
+    connect failed.
+    greeting: 
+
+17.06.2009 13:45 -------- ChilkatLog:
+  LoadEml:
+    DllDate: Mar 19 2009
+    filename: bilgi@bisorusor.com_Inbox_646_ae.eml
+    Failed to open file (2)
+    filename: bilgi@bisorusor.com_Inbox_646_ae.eml
+    osErrorInfo: The system cannot find the file specified.
+    WindowsError: 0x2
+    Failed.
+
+17.06.2009 13:48 -------- ChilkatLog:
+  SelectMailbox:
+    DllDate: Mar 19 2009
+    UnlockPrefix: Anything for 30-day trial
+    Username: atakan.eser
+    Component: .NET 2.0
+    mailbox: inbox
+    separatorChar: /
+    utf7EncodedMailboxName: inbox
+    numBytesRequested: 2048
+    Connection closed by server.
+    Failed to get next response line from IMAP server.
+    Failed to select mailbox
+    mailbox: inbox
+    ImapResponse: 
+    Failed.
+

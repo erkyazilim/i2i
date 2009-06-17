@@ -1,10 +1,14 @@
 Imports System.IO
+Imports system.Text
 Public Class frmMain
 
     Dim ImapDownload As New Chilkat.Imap
     Dim ImapUpload As New Chilkat.Imap
     Dim InboxUploaded As Boolean = False
-    Dim myStream As Stream
+    Dim FilePath As String
+
+    Dim AccountCount As Integer = 0
+    Dim UploadedAccountCount As Integer = 0
 
 
     Public Sub New()
@@ -36,7 +40,7 @@ Public Class frmMain
                     If (success <> True) Then
                         ErrorLog(ImapDownload.LastErrorText)
                     Else
-                        ImapDownload.ReadTimeout = 60
+                        ImapDownload.ReadTimeout = 10
 
                         PrepareImapDownload = True
                     End If
@@ -75,7 +79,7 @@ Public Class frmMain
                     If (success <> True) Then
                         ErrorLog(ImapUpload.LastErrorText)
                     Else
-                        ImapUpload.ReadTimeout = 60
+                        ImapUpload.ReadTimeout = 10
 
                         PrepareImapUpload = True
                     End If
@@ -94,18 +98,9 @@ Public Class frmMain
         End Try
     End Function
 
-    Private Sub ErrorLog(ByVal strError As String)
-        Try
-            txtErrorLog.Text += strError & vbCrLf
-            txtErrorLog.Text += "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" & vbCrLf
-            txtErrorLog.Refresh()
-        Catch ex As Exception
-
-        End Try
-    End Sub
-
     Private Sub btnOpenFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnOpenFile.Click
         Try
+            AccountCount = 0
             Dim openFileDialog1 As New OpenFileDialog()
 
             openFileDialog1.InitialDirectory = Application.StartupPath
@@ -113,51 +108,73 @@ Public Class frmMain
             openFileDialog1.RestoreDirectory = True
 
             If openFileDialog1.ShowDialog() = DialogResult.OK Then
-                myStream = openFileDialog1.OpenFile()
-                If Not (myStream Is Nothing) Then
+
+                'Read the file 
+                FilePath = openFileDialog1.FileName
+
+                Dim fileStream As FileStream = File.OpenRead(FilePath)
+
+                If Not (fileStream Is Nothing) Then
+                    Using sr As StreamReader = New StreamReader(fileStream)
+
+                        Dim LineCount As Int16 = 0
+                        Dim line As String
+                        Do
+                            line = sr.ReadLine()
+                            If Not line Is Nothing Then LineCount += 1
+                        Loop Until line Is Nothing
+
+                        WriteLog("+++++++++++++++++++++++++++++++++++++++++++++++++++")
+                        WriteLog(LineCount.ToString & " accounts loaded.")
+                        WriteLog("Click ""Start"" to begin transfer...")
+                        WriteLog("+++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+                        AccountCount = LineCount
+
+
+                    End Using
+
                     btnOpenFile.Enabled = False
-                    btnStartMassUpload.Enabled = True
+                    btnStartBulkUpload.Enabled = True
                 End If
+                fileStream.Close()
+
             End If
 
         Catch ex As Exception
+
+
             txtErrorLog.Text += ex.Message.ToString & vbCrLf
             txtErrorLog.Text += "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" & vbCrLf
             txtErrorLog.Refresh()
         End Try
     End Sub
 
-    Private Sub btnStartMassUpload_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnStartMassUpload.Click
+    Private Sub btnStartBulkUpload_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnStartBulkUpload.Click
         Try
-            lbProcess.Items.Clear()
+            Cursor = Cursors.WaitCursor
+
             txtErrorLog.Text = ""
 
-            btnStartMassUpload.Enabled = False
-            If Not (myStream Is Nothing) Then
-                Using sr As StreamReader = New StreamReader(myStream)
-                    Dim line As String
-                    ' Read and display the lines from the file until the end 
-                    ' of the file is reached.
-                    Do
-                        line = sr.ReadLine()
-                        Dim Username As String = Split(line, ";")(0)
-                        Dim Password As String = Split(line, ";")(1)
+            btnStartBulkUpload.Enabled = False
+            btnCancelBulkUpload.Enabled = True
+            txtDownloadServer2.Enabled = False
+            txtUploadServer2.Enabled = False
 
-                        ' Download & upload proc.
-                        UploadMailBox(txtDownloadServer2.Text, Username, Password, txtUploadServer2.Text, Username, Password)
-                    Loop Until line Is Nothing
-                    sr.Close()
-                End Using
 
-                ' Insert code to read the stream here.
-                myStream.Close()
-            End If
+            bwUploader.WorkerSupportsCancellation = True
+            bwUploader.WorkerReportsProgress = True
+            bwUploader.RunWorkerAsync()
+
+            btnStartBulkUpload.Enabled = False
+            btnOpenFile.Enabled = False
+            btnCancelBulkUpload.Enabled = True
         Catch ex As Exception
             txtErrorLog.Text += ex.Message.ToString & vbCrLf
             txtErrorLog.Text += "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" & vbCrLf
             txtErrorLog.Refresh()
         Finally
-            btnOpenFile.Enabled = True
+            Cursor = Cursors.Default
         End Try
     End Sub
 
@@ -189,7 +206,7 @@ Public Class frmMain
 
 
                 If (mboxes Is Nothing) Then
-                    MsgBox(ImapDownload.LastErrorText)
+                    ErrorLog(ImapDownload.LastErrorText)
                 Else
                     Dim i As Integer
                     Dim mbName As String = ""
@@ -205,10 +222,15 @@ Public Class frmMain
 
                     For i = 0 To mboxes.Count - 1
 
+
+                        'some large mailboxes causes component to logout. So we need to check it and login if not logged in.
+                        If Not ImapDownload.IsConnected Then ImapDownload.Connect(DownloadServer)
+                        If Not ImapDownload.IsLoggedIn Then ImapDownload.Login(DownloadUsername, DownloadPassword)
+
                         '  Select an IMAP mailbox (folder)
                         success = ImapDownload.SelectMailbox(mboxes.GetName(i))
                         If (success <> True) Then
-                            MsgBox(ImapDownload.LastErrorText)
+                            ErrorLog(ImapDownload.LastErrorText)
                         Else
 
                             mbName = mboxes.GetName(i)
@@ -231,18 +253,27 @@ Public Class frmMain
                                     If InboxUploaded Then GoTo bypassmailbox
                                 End If
 
+                                'some large mailboxes causes component to logout. So we need to check it and login if not logged in.
+                                If Not ImapUpload.IsConnected Then ImapUpload.Connect(UploadServer)
+                                If Not ImapUpload.IsLoggedIn Then ImapUpload.Login(UploadUsername, UploadPassword)
+
                                 ' Creating and subscribing folder on Upload Server
                                 success = ImapUpload.CreateMailbox(mbName)
                                 ImapUpload.Subscribe(mbName)
 
-                                lbProcess.Items.Add("There are " & ImapDownload.NumMessages & " emails in " & mbName & " folder.")
-                                lbProcess.SelectedIndex = lbProcess.Items.Count - 1
+                                WriteLog("There are " & ImapDownload.NumMessages & " emails in " & mbName & " folder.")
 
 
-                                'First, UNSEEN (Unread) Emails
-                                TransferEmails("UNSEEN", DownloadUsername, mbName)
-                                'Second, SEEN (read) Emails
+
+                                'First, SEEN (read) Emails
+                                WriteLog("Getting SEEN emails in " & mbName & " folder.")
+
                                 TransferEmails("SEEN", DownloadUsername, mbName)
+
+                                'Second, UNSEEN (Unread) Emails
+                                WriteLog("Getting UNSEEN emails in " & mbName & " folder.")
+
+                                TransferEmails("UNSEEN", DownloadUsername, mbName)
 
                             End If
 
@@ -275,53 +306,56 @@ bypassmailbox:
             Dim success As Boolean
             ' Get UNSEEN messages.
             Dim msgSet As Chilkat.MessageSet
-
             msgSet = ImapDownload.Search(Criteria, True)
 
             ' Fetch all email into a StringArray object.
             ' Each message within the StringArray is the full MIME source of an email.
             Dim sa As Chilkat.StringArray
             sa = ImapDownload.FetchBundleAsMime(msgSet)
+            WriteLog(sa.Count & " " & Criteria & " emails for " & DownloadUsername & " in " & mbName & " folder.")
+            If sa.Count > 0 Then
 
-            Dim ii As Long
+                WriteLog("Download starting for " & Criteria & " emails")
+                Dim ii As Long
+                For ii = 0 To sa.Count - 1
+                    ' saving message to file
+                    sa.SaveNthToFile(ii, DownloadUsername & "_" & mbName & "_" & ii.ToString & "_ae.eml")
+                Next
 
-            lbProcess.Items.Add("Processing " & sa.Count & " " & Criteria & " emails in " & mbName & " folder. Download starting.")
-            lbProcess.SelectedIndex = lbProcess.Items.Count - 1
-            For ii = 0 To sa.Count - 1
-                ' saving message to file
-                sa.SaveNthToFile(ii, DownloadUsername & "_" & mbName & "_" & ii.ToString & "_ae.eml")
-            Next
+                Dim email As New Chilkat.Email()
 
-            Dim email As New Chilkat.Email()
-
-            '  Load each emails from .eml files.
-            Dim iii As Long
-            For iii = 0 To sa.Count - 1
-                success = email.LoadEml(DownloadUsername & "_" & mbName & "_" & iii.ToString & "_ae.eml")
-                If (success <> True) Then
-                    ErrorLog(email.LastErrorText)
-                Else
-                    If email.Size > 0 AndAlso Not (ImapDownload.GetMailFlag(email, "Deleted") = 1) Then
-
-                        If Criteria = "SEEN" Then ImapUpload.AppendSeen = True
-                        If Criteria = "UNSEEN" Then ImapUpload.AppendSeen = False
-
-                        success = ImapUpload.AppendMail(mbName, email)
-                        If (success <> True) Then
-                            ErrorLog(ImapUpload.LastErrorText)
-                        Else
-
-                            lbProcess.Items.Add("Email " & DownloadUsername & "_" & mbName & "_" & iii.ToString & "_ae.eml uploaded to " & mbName & " on upload server")
-                            lbProcess.SelectedIndex = lbProcess.Items.Count - 1
-                        End If
+                '  Load each emails from .eml files.
+                Dim iii As Long
+                For iii = 0 To sa.Count - 1
+                    success = email.LoadEml(DownloadUsername & "_" & mbName & "_" & iii.ToString & "_ae.eml")
+                    If (success <> True) Then
+                        ErrorLog(email.LastErrorText)
                     Else
-                        ErrorLog("Zero sized email " & DownloadUsername & "_" & mbName & "_" & iii.ToString & "_ae.eml not processed")
+                        If email.Size > 0 AndAlso Not (ImapDownload.GetMailFlag(email, "Deleted") = 1) Then
+
+                            If Criteria = "SEEN" Then ImapUpload.AppendSeen = True
+                            If Criteria = "UNSEEN" Then ImapUpload.AppendSeen = False
+
+                            success = ImapUpload.AppendMail(mbName, email)
+                            If (success <> True) Then
+                                ErrorLog(ImapUpload.LastErrorText)
+                            Else
+
+                                WriteLog("Email " & DownloadUsername & "_" & mbName & "_" & iii.ToString & "_ae.eml uploaded to " & mbName & " on upload server.")
+
+                            End If
+                        Else
+                            ErrorLog("Zero sized email " & DownloadUsername & "_" & mbName & "_" & iii.ToString & "_ae.eml not processed.")
+                        End If
+
                     End If
+                Next
+            Else
+                WriteLog("Zero " & Criteria & " emails. Bypassing...")
+            End If
 
-                End If
-            Next
         Catch ex As Exception
-
+            ErrorLog(ex.Message)
         End Try
     End Sub
 
@@ -370,4 +404,173 @@ bypassmailbox:
     Private Sub LinkLabel2_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
         System.Diagnostics.Process.Start("http://www.chilkatsoft.com/imap-dotnet.asp")
     End Sub
+
+    Private Sub ErrorLog(ByVal strError As String)
+        Try
+            Dim ErrLog As String = ""
+            ErrLog += "[" & DateTime.Now.ToString & "] " & strError & vbCrLf
+            ErrLog += "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" & vbCrLf
+
+            txtErrorLog.Text += ErrLog
+            txtErrorLog.Refresh()
+
+            CreateErrorLogRecord(strError, "i2i")
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub WriteLog(ByVal strLog As String)
+        Try
+            lbProcess.Items.Add("[" & DateTime.Now.ToString & "] " & strLog)
+            lbProcess.SelectedIndex = lbProcess.Items.Count - 1
+
+            CreateLogRecord(strLog, "i2i")
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Private Sub CreateLogRecord(ByVal LogMessage As String, ByVal LogRecordName As String)
+
+        Dim FilePath As String
+        Dim BytesToWrite() As Byte
+        Dim RecordWriter As StreamWriter
+        Dim StrNewLine As String
+
+        Try
+            FilePath = LogRecordName + ".log"
+            If (File.Exists(FilePath)) Then
+                RecordWriter = New StreamWriter(File.Open(FilePath, FileMode.Append, FileAccess.Write))
+            Else
+                RecordWriter = New StreamWriter(File.Open(FilePath, FileMode.Create, FileAccess.Write))
+            End If
+
+            StrNewLine = Chr(13) & Chr(10)
+            LogMessage = DateTime.Now.ToShortDateString() & " " & DateTime.Now.ToShortTimeString() & " -------- " & LogMessage & StrNewLine
+            BytesToWrite = Encoding.UTF8.GetBytes(LogMessage)
+            RecordWriter.BaseStream.Write(BytesToWrite, 0, BytesToWrite.Length)
+            RecordWriter.Flush()
+            RecordWriter.Close()
+            RecordWriter.Dispose()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub CreateErrorLogRecord(ByVal LogMessage As String, ByVal LogRecordName As String)
+
+        Dim FilePath As String
+        Dim BytesToWrite() As Byte
+        Dim RecordWriter As StreamWriter
+        Dim StrNewLine As String
+
+        Try
+            FilePath = LogRecordName + "_Err.log"
+            If (File.Exists(FilePath)) Then
+                RecordWriter = New StreamWriter(File.Open(FilePath, FileMode.Append, FileAccess.Write))
+            Else
+                RecordWriter = New StreamWriter(File.Open(FilePath, FileMode.Create, FileAccess.Write))
+            End If
+
+            StrNewLine = Chr(13) & Chr(10)
+            LogMessage = DateTime.Now.ToShortDateString() & " " & DateTime.Now.ToShortTimeString() & " -------- " & LogMessage & StrNewLine
+            BytesToWrite = Encoding.UTF8.GetBytes(LogMessage)
+            RecordWriter.BaseStream.Write(BytesToWrite, 0, BytesToWrite.Length)
+            RecordWriter.Flush()
+            RecordWriter.Close()
+            RecordWriter.Dispose()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub bwUploader_DoWork(ByVal sender As System.Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles bwUploader.DoWork
+
+        pbUpload.Maximum = AccountCount
+        pbUpload.Minimum = 0
+
+
+        Dim fileStream As FileStream = File.OpenRead(FilePath)
+        If Not (fileStream Is Nothing) Then
+            Using sr As StreamReader = New StreamReader(fileStream)
+                Dim line As String
+                ' Read and display the lines from the file until the end 
+                ' of the file is reached.
+                Do
+
+
+                    line = sr.ReadLine()
+                    If Not line Is Nothing AndAlso line.Contains(";") Then
+                        Dim Username As String = Split(line, ";")(0)
+                        Dim Password As String = Split(line, ";")(1)
+
+                        If Len(Username) > 0 AndAlso Len(Password) > 0 Then
+                            ' Download & upload proc.
+                            InboxUploaded = False
+                            WriteLog("Transferring " & Username & " from " & txtDownloadServer2.Text & " to " & txtUploadServer2.Text)
+
+                            UploadMailBox(txtDownloadServer2.Text, Username, Password, txtUploadServer2.Text, Username, Password)
+                        End If
+
+                        UploadedAccountCount += 1
+                        bwUploader.ReportProgress(UploadedAccountCount)
+                    End If
+
+                    If bwUploader.CancellationPending = True Then Exit Do
+                Loop Until line Is Nothing
+                sr.Close()
+            End Using
+        End If
+
+        fileStream.Close()
+
+    End Sub
+
+    Private Sub bwUploader_ProgressChanged(ByVal sender As Object, ByVal e As System.ComponentModel.ProgressChangedEventArgs) Handles bwUploader.ProgressChanged
+        pbUpload.Value = e.ProgressPercentage
+        lblUploadedCount.Text = pbUpload.Value.ToString & "/" & pbUpload.Maximum.ToString
+    End Sub
+
+    Private Sub bwUploader_RunWorkerCompleted(ByVal sender As Object, ByVal e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bwUploader.RunWorkerCompleted
+        If e.Cancelled Then
+            MsgBox("Upload cancelled. Some accounts and emails not uploaded to the upload server. Check log files.", My.Application.Info.ProductName, MessageBoxIcon.Warning)
+
+            WriteLog("+++++++++++++++++++++++++++++++++++++++++++++++++++")
+            WriteLog("Upload cancelled. Some accounts and emails not uploaded to the upload server. Check log files.")
+            WriteLog("+++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+            pbUpload.Value = 0
+            UploadedAccountCount = 0
+        Else
+            WriteLog("+++++++++++++++++++++++++++++++++++++++++++++++++++")
+            WriteLog("File End")
+            WriteLog("+++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+            pbUpload.Value = 0
+            UploadedAccountCount = 0
+        End If
+
+        btnOpenFile.Enabled = True
+        btnStartBulkUpload.Enabled = False
+        btnCancelBulkUpload.Enabled = False
+        txtDownloadServer2.Enabled = True
+        txtUploadServer2.Enabled = True
+    End Sub
+
+    Private Sub btnCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCancelBulkUpload.Click
+        bwUploader.CancelAsync()
+    End Sub
+
+    Private Sub frmMain_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Try
+            btnStartBulkUpload.CheckForIllegalCrossThreadCalls = False
+        Catch ex As Exception
+
+        End Try
+    End Sub
 End Class
+
+

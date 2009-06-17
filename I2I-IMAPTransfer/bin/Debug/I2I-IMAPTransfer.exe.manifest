@@ -4,7 +4,7 @@
   <description asmv2:iconFile="i2i.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="I2I-IMAPTransfer" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <assemblyIdentity name="I2I-IMAPTransfer" version="1.5.1.0" language="neutral" processorArchitecture="x86" />
     <commandLine file="I2I-IMAPTransfer.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -40,14 +40,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="I2I-IMAPTransfer.exe" size="786432">
-      <assemblyIdentity name="I2I-IMAPTransfer" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="I2I-IMAPTransfer.exe" size="794624">
+      <assemblyIdentity name="I2I-IMAPTransfer" version="1.5.1.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>9Sb5S69eCluapFRZu/4dmMB+GpQ=</dsig:DigestValue>
+        <dsig:DigestValue>vkikUGv9HLS/ybcMY1amfWPRg68=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
