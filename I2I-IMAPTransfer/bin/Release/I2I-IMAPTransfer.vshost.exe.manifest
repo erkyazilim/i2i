@@ -39,7 +39,17 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="2.0.50727.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="System.Core" version="3.5.0.0" publicKeyToken="b77a5c561934e089" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="WindowsBase" version="3.0.0.0" publicKeyToken="31bf3856ad364e35" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
   <dependency>
@@ -55,24 +65,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="I2I-IMAPTransfer.exe" size="778752">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="I2I-IMAPTransfer.exe" size="778240">
       <assemblyIdentity name="I2I-IMAPTransfer" version="1.5.1.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>/io3RhNcnptl426Y3AsPFP6TlgM=</dsig:DigestValue>
+        <dsig:DigestValue>fH0xqESKqvKa+C2PnN1+7QzfT3g=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="I2I-IMAPTransfer.exe.config" size="1363">
+  <file name="I2I-IMAPTransfer.exe.config" size="1336">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>khphXH9C52lgJ5G/BSPAc1IPlok=</dsig:DigestValue>
+      <dsig:DigestValue>sD1suQfBOUkse5FBR6SYsx74Of0=</dsig:DigestValue>
     </hash>
   </file>
   <file name="i2i.ico" size="362902">

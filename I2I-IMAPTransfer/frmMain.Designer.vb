@@ -22,70 +22,70 @@ Partial Class frmMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
-        Me.txtErrorLog = New System.Windows.Forms.TextBox
-        Me.lbProcess = New System.Windows.Forms.ListBox
-        Me.TabControl1 = New System.Windows.Forms.TabControl
-        Me.TabPage1 = New System.Windows.Forms.TabPage
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.Label4 = New System.Windows.Forms.Label
-        Me.txtUploadServer1 = New System.Windows.Forms.TextBox
-        Me.txtUploadPassword1 = New System.Windows.Forms.TextBox
-        Me.Label5 = New System.Windows.Forms.Label
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.txtUploadUsername1 = New System.Windows.Forms.TextBox
-        Me.btnStartSingleUpload = New System.Windows.Forms.Button
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.Label3 = New System.Windows.Forms.Label
-        Me.txtDownloadServer1 = New System.Windows.Forms.TextBox
-        Me.txtDownloadPassword1 = New System.Windows.Forms.TextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.txtDownloadUsername1 = New System.Windows.Forms.TextBox
-        Me.TabPage2 = New System.Windows.Forms.TabPage
-        Me.Label20 = New System.Windows.Forms.Label
-        Me.btnStartBulkUpload = New System.Windows.Forms.Button
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox
-        Me.Label11 = New System.Windows.Forms.Label
-        Me.txtUploadServer2 = New System.Windows.Forms.TextBox
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox
-        Me.Label7 = New System.Windows.Forms.Label
-        Me.txtDownloadServer2 = New System.Windows.Forms.TextBox
-        Me.btnOpenFile = New System.Windows.Forms.Button
-        Me.TabPage3 = New System.Windows.Forms.TabPage
-        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel
-        Me.chkTransferDeletedItems = New System.Windows.Forms.CheckBox
-        Me.chkTransferSentItems = New System.Windows.Forms.CheckBox
-        Me.txtTargetFolderDeleted = New System.Windows.Forms.TextBox
-        Me.Label15 = New System.Windows.Forms.Label
-        Me.txtSourceFolderDeleted = New System.Windows.Forms.TextBox
-        Me.Label16 = New System.Windows.Forms.Label
-        Me.txtTargetFolderSent = New System.Windows.Forms.TextBox
-        Me.Label14 = New System.Windows.Forms.Label
-        Me.txtSourceFolderSent = New System.Windows.Forms.TextBox
-        Me.Label13 = New System.Windows.Forms.Label
-        Me.txtLicense = New System.Windows.Forms.TextBox
-        Me.Label12 = New System.Windows.Forms.Label
-        Me.TabPage4 = New System.Windows.Forms.TabPage
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox
-        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel
-        Me.Label19 = New System.Windows.Forms.Label
-        Me.Label18 = New System.Windows.Forms.Label
-        Me.Label17 = New System.Windows.Forms.Label
-        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
-        Me.Label8 = New System.Windows.Forms.Label
-        Me.TextBox3 = New System.Windows.Forms.TextBox
-        Me.TextBox4 = New System.Windows.Forms.TextBox
-        Me.Label9 = New System.Windows.Forms.Label
-        Me.Label10 = New System.Windows.Forms.Label
-        Me.TextBox5 = New System.Windows.Forms.TextBox
+        Me.txtErrorLog = New System.Windows.Forms.TextBox()
+        Me.lbProcess = New System.Windows.Forms.ListBox()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtUploadServer1 = New System.Windows.Forms.TextBox()
+        Me.txtUploadPassword1 = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.txtUploadUsername1 = New System.Windows.Forms.TextBox()
+        Me.btnStartSingleUpload = New System.Windows.Forms.Button()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtDownloadServer1 = New System.Windows.Forms.TextBox()
+        Me.txtDownloadPassword1 = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtDownloadUsername1 = New System.Windows.Forms.TextBox()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.btnCancelBulkUpload = New System.Windows.Forms.Button()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.btnStartBulkUpload = New System.Windows.Forms.Button()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.txtUploadServer2 = New System.Windows.Forms.TextBox()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtDownloadServer2 = New System.Windows.Forms.TextBox()
+        Me.btnOpenFile = New System.Windows.Forms.Button()
+        Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.chkTransferDeletedItems = New System.Windows.Forms.CheckBox()
+        Me.chkTransferSentItems = New System.Windows.Forms.CheckBox()
+        Me.txtTargetFolderDeleted = New System.Windows.Forms.TextBox()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.txtSourceFolderDeleted = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.txtTargetFolderSent = New System.Windows.Forms.TextBox()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.txtSourceFolderSent = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.txtLicense = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.TextBox4 = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.bwUploader = New System.ComponentModel.BackgroundWorker
-        Me.pbUpload = New System.Windows.Forms.ProgressBar
-        Me.btnCancelBulkUpload = New System.Windows.Forms.Button
-        Me.Label21 = New System.Windows.Forms.Label
-        Me.lblUploadedCount = New System.Windows.Forms.Label
+        Me.bwUploader = New System.ComponentModel.BackgroundWorker()
+        Me.pbUpload = New System.Windows.Forms.ProgressBar()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.lblUploadedCount = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
@@ -294,6 +294,16 @@ Partial Class frmMain
         Me.TabPage2.Text = "Bulk Upload"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
+        'btnCancelBulkUpload
+        '
+        Me.btnCancelBulkUpload.Enabled = False
+        Me.btnCancelBulkUpload.Location = New System.Drawing.Point(619, 15)
+        Me.btnCancelBulkUpload.Name = "btnCancelBulkUpload"
+        Me.btnCancelBulkUpload.Size = New System.Drawing.Size(105, 87)
+        Me.btnCancelBulkUpload.TabIndex = 15
+        Me.btnCancelBulkUpload.Text = "Cancel"
+        Me.btnCancelBulkUpload.UseVisualStyleBackColor = True
+        '
         'Label20
         '
         Me.Label20.AutoSize = True
@@ -410,7 +420,7 @@ Partial Class frmMain
         Me.LinkLabel2.TabStop = True
         Me.LinkLabel2.Text = "(?) License Info"
         Me.ToolTip1.SetToolTip(Me.LinkLabel2, "Chilkat IMAP is a commercial component we used to handle IMAP protocol. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "You can" & _
-                " buy a license from their website or use it for 30 days.")
+        " buy a license from their website or use it for 30 days.")
         '
         'chkTransferDeletedItems
         '
@@ -512,7 +522,7 @@ Partial Class frmMain
         Me.txtLicense.TabIndex = 1
         Me.txtLicense.Text = "Anything for 30-day trial"
         Me.ToolTip1.SetToolTip(Me.txtLicense, "Chilkat IMAP is a commercial component we used to handle IMAP protocol. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "You can" & _
-                " buy a license from their website or use it for 30 days.")
+        " buy a license from their website or use it for 30 days.")
         '
         'Label12
         '
@@ -523,7 +533,7 @@ Partial Class frmMain
         Me.Label12.TabIndex = 0
         Me.Label12.Text = "Chilkat IMAP Compenent License"
         Me.ToolTip1.SetToolTip(Me.Label12, "Chilkat IMAP is a commercial component we used to handle IMAP protocol. " & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "You can" & _
-                " buy a license from their website or use it for 30 days.")
+        " buy a license from their website or use it for 30 days.")
         '
         'TabPage4
         '
@@ -554,10 +564,10 @@ Partial Class frmMain
         Me.LinkLabel1.AutoSize = True
         Me.LinkLabel1.Location = New System.Drawing.Point(109, 64)
         Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Size = New System.Drawing.Size(151, 13)
+        Me.LinkLabel1.Size = New System.Drawing.Size(160, 13)
         Me.LinkLabel1.TabIndex = 3
         Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "http://code.google.com/p/i2i/"
+        Me.LinkLabel1.Text = "https://github.com/erkyazilim/i2i"
         '
         'Label19
         '
@@ -655,16 +665,6 @@ Partial Class frmMain
         Me.pbUpload.Name = "pbUpload"
         Me.pbUpload.Size = New System.Drawing.Size(585, 20)
         Me.pbUpload.TabIndex = 11
-        '
-        'btnCancelBulkUpload
-        '
-        Me.btnCancelBulkUpload.Enabled = False
-        Me.btnCancelBulkUpload.Location = New System.Drawing.Point(619, 15)
-        Me.btnCancelBulkUpload.Name = "btnCancelBulkUpload"
-        Me.btnCancelBulkUpload.Size = New System.Drawing.Size(105, 87)
-        Me.btnCancelBulkUpload.TabIndex = 15
-        Me.btnCancelBulkUpload.Text = "Cancel"
-        Me.btnCancelBulkUpload.UseVisualStyleBackColor = True
         '
         'Label21
         '
